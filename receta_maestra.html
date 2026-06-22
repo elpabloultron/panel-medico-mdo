@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{TITULO_DOCUMENTO}} - {{FOLIO}}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+        body { background-color: #f0f0f0; display: flex; justify-content: center; padding: 20px; font-family: 'Montserrat', sans-serif; color: #2c3e50; }
+        .a4-page { background: white; width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 0 10px rgba(0,0,0,0.1); box-sizing: border-box; position: relative; }
+        .tech-strip { background-color: #f8f9fa; border-bottom: 2px solid #2c3e50; padding: 10px; font-size: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        header { display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-bottom: 20px; }
+        .doc-info h1 { margin: 0; font-size: 18px; color: #2c3e50; }
+        .doc-info p { margin: 2px 0; font-size: 12px; }
+        .recipe-title { text-align: right; }
+        .recipe-title h2 { margin: 0; font-size: 22px; color: #27ae60; text-transform: uppercase; }
+        .recipe-title p { margin: 2px 0; font-size: 12px; font-weight: 600; }
+        .section-title { background-color: #2c3e50; color: white; padding: 5px 10px; font-size: 12px; font-weight: bold; margin-bottom: 10px; border-radius: 3px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .field { margin-bottom: 8px; font-size: 12px; }
+        .field strong { color: #34495e; }
+        .legal-text { font-size: 10px; color: #555; line-height: 1.4; margin-bottom: 20px; background: #f9f9f9; padding: 10px; border-left: 3px solid #27ae60; }
+        .signature-block { display: flex; justify-content: space-between; margin-top: 30px; border: 1px solid #2c3e50; padding: 15px; border-radius: 5px; background-color: #fafbfc; }
+        .fea-info { font-size: 10px; line-height: 1.5; }
+        .fea-stamp { width: 120px; height: 60px; border: 2px solid #e74c3c; color: #e74c3c; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; text-align: center; transform: rotate(-5deg); }
+        .footer-note { font-size: 9px; text-align: center; color: #7f8c8d; margin-top: 20px; border-top: 1px solid #ecf0f1; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="a4-page">
+        <div class="tech-strip">
+            <div>
+                <strong>Documento Electrónico Verificable</strong><br>
+                Folio: <span style="font-family: monospace;">{{FOLIO}}</span><br>
+                Estado: <strong>{{ESTADO}}</strong>
+            </div>
+            <div>
+                <img src="{{QR_BASE64}}" style="width: 55px; height: 55px; border: 1px solid #adb5bd;">
+            </div>
+        </div>
+
+        <header>
+            <div class="doc-info">
+                <h1>Dr. Alberto Esteban Muñoz</h1>
+                <p>Medicina General y Salud Mental</p>
+                <p>RNPI 21672 | RUT 18.177.179-8</p>
+                <p>Cervantes 1758, Osorno</p>
+            </div>
+            <div class="recipe-title">
+                <h2>{{TITULO_DOCUMENTO}}</h2>
+                <p>{{SUBTITULO_DOCUMENTO}}</p>
+                <p style="color: #7f8c8d;">{{TEXTO_USO}}</p>
+            </div>
+        </header>
+
+        <div class="grid-2">
+            <div>
+                <div class="section-title">1. IDENTIFICACIÓN DEL PACIENTE</div>
+                <div class="field"><strong>Nombre completo:</strong> {{NOMBRE}}</div>
+                <div class="field"><strong>RUT:</strong> {{RUT}} | <strong>Edad:</strong> {{EDAD}} años</div>
+                <div class="field"><strong>Domicilio:</strong> {{DOMICILIO}}</div>
+                <div class="field"><strong>Fecha de emisión:</strong> {{FECHA}}</div>
+            </div>
+            <div>
+                <div class="section-title">2. DATOS CLÍNICOS</div>
+                <div class="field"><strong>Diagnóstico principal:</strong> {{DIAGNOSTICO}}</div>
+                <div class="field"><strong>Vigencia del documento:</strong> {{DURACION}}</div>
+            </div>
+        </div>
+
+        <div class="section-title">3. PRESCRIPCIÓN</div>
+        <div class="grid-2">
+            <div>
+                <div class="field"><strong>Medicamento / Compuesto:</strong> {{MEDICAMENTO}}</div>
+                <div class="field"><strong>Dosis e Indicaciones:</strong> {{DOSIS}}</div>
+                <div class="field"><strong>Vía de administración:</strong> {{VIA}}</div>
+            </div>
+            <div>
+                <div class="field"><strong>Relación THC/CBD:</strong> {{RATIO}}</div>
+            </div>
+        </div>
+
+        <div class="section-title">4. RESPALDO Y VALIDACIÓN</div>
+        <div class="legal-text">
+            • Este documento ha sido emitido mediante un sistema informático seguro.<br>
+            • La validez, retención (si aplica) y trazabilidad de esta prescripción deben verificarse escaneando el código QR impreso en la parte superior.<br>
+            • Prohibida su alteración o modificación manual.
+        </div>
+
+        <div class="signature-block">
+            <div class="fea-info">
+                <strong>Documento firmado electrónicamente por:</strong><br>
+                Dr. Alberto Esteban Muñoz<br>
+                RNPI: 21672<br>
+                <strong>Fecha de firma:</strong> {{FECHA}}<br>
+                <em>Firma Electrónica según Ley 19.799</em>
+            </div>
+            <div class="fea-stamp">FIRMA<br>ELECTRÓNICA<br>AVANZADA</div>
+        </div>
+    </div>
+</body>
+</html>
