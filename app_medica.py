@@ -47,11 +47,22 @@ def generar_pdf_desde_html(html_modificado, nombre_archivo_salida):
         browser = p.chromium.launch()
         page = browser.new_page()
         
-        # El comando wait_until="networkidle" obliga al navegador a esperar 
-        # a que descarguen las fuentes y colores antes de imprimir.
-        page.set_content(html_modificado, wait_until="networkidle")
+        # 1. Inyectar el HTML
+        page.set_content(html_modificado, wait_until="load")
         
-        page.pdf(path=nombre_archivo_salida, format="A4", print_background=True)
+        # 2. Obligar al motor a esperar que las fuentes web estén listas
+        page.evaluate("document.fonts.ready")
+        
+        # 3. Pausa forzada de 1.5 segundos para que los servidores dibujen la cuadrícula
+        page.wait_for_timeout(1500)
+        
+        # 4. Imprimir asegurando que no haya márgenes ocultos que empujen el diseño
+        page.pdf(
+            path=nombre_archivo_salida, 
+            format="A4", 
+            print_background=True,
+            margin={"top": "0", "bottom": "0", "left": "0", "right": "0"}
+        )
         browser.close()
 
 # 2. Interfaz Principal (Solo visible si pasó el login)
