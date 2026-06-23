@@ -91,8 +91,8 @@ if rut_busqueda:
         if not datos_bd:
             st.warning("Debe registrar y guardar los datos del paciente en la pestaña anterior para ver su historial.")
         else:
-            # Buscar recetas emitidas
-            resp_recetas = supabase.table("recetas").select("*").eq("rut_paciente", rut_busqueda).order("created_at", desc=True).execute()
+            # Buscar recetas emitidas (ACTUALIZADO A fecha_emision)
+            resp_recetas = supabase.table("recetas").select("*").eq("rut_paciente", rut_busqueda).order("fecha_emision", desc=True).execute()
             
             # Buscar archivos adjuntos
             resp_archivos = supabase.table("archivos_adjuntos").select("*").eq("rut_paciente", rut_busqueda).order("fecha_subida", desc=True).execute()
@@ -102,7 +102,13 @@ if rut_busqueda:
             
             # --- Renderizar Recetas y Documentos ---
             for registro in resp_recetas.data:
-                fecha = datetime.fromisoformat(registro["created_at"]).strftime("%d/%m/%Y a las %H:%M")
+                # Extraer la fecha correctamente con el nuevo nombre de columna
+                fecha_str = registro.get("fecha_emision")
+                try:
+                    fecha = datetime.fromisoformat(str(fecha_str)).strftime("%d/%m/%Y a las %H:%M") if fecha_str else "Fecha no registrada"
+                except ValueError:
+                    fecha = str(fecha_str) # Por si la fecha se guardó en un formato distinto
+                    
                 datos = registro.get("datos_clinicos", {})
                 tipo = datos.get("tipo", "Documento")
                 folio = registro.get("folio", "N/A")
@@ -117,12 +123,16 @@ if rut_busqueda:
             
             # --- Renderizar Archivos Adjuntos ---
             for archivo in resp_archivos.data:
-                fecha_arch = datetime.fromisoformat(archivo["fecha_subida"]).strftime("%d/%m/%Y a las %H:%M")
+                fecha_arch_str = archivo.get("fecha_subida")
+                try:
+                    fecha_arch = datetime.fromisoformat(str(fecha_arch_str)).strftime("%d/%m/%Y a las %H:%M") if fecha_arch_str else "Fecha no registrada"
+                except ValueError:
+                    fecha_arch = str(fecha_arch_str)
+                    
                 nombre_arch = archivo.get("nombre_archivo", "Documento Adjunto")
                 
                 with st.expander(f"📎 {fecha_arch} | Resultado Laboratorio/Imagen: {nombre_arch}"):
                     st.info(f"Tipo de archivo: {archivo.get('tipo_documento', 'N/A')}")
-                    # Aquí a futuro pondremos el botón de descarga del archivo
 
     # --- PESTAÑA 3: SUBIDA DE EXÁMENES ---
     with tab_adjuntos:
