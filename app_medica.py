@@ -46,7 +46,11 @@ def generar_pdf_desde_html(html_modificado, nombre_archivo_salida):
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
-        page.set_content(html_modificado)
+        
+        # El comando wait_until="networkidle" obliga al navegador a esperar 
+        # a que descarguen las fuentes y colores antes de imprimir.
+        page.set_content(html_modificado, wait_until="networkidle")
+        
         page.pdf(path=nombre_archivo_salida, format="A4", print_background=True)
         browser.close()
 
@@ -169,7 +173,7 @@ else:
                     # ¡IMPORTANTE! Reemplaza la URL de abajo con la URL REAL 
                     # de tu Portal de Validación público de Farmacia.
                     # ========================================================
-                    url_validacion = f"https://TU-URL-REAL-DE-STREAMLIT.app/?folio={folio_generado}"
+                    url_validacion = f"https://app-validacion-mdo-pdnqwykc4z27tvjszow96z.streamlit.app/?folio={folio_generado}"
                     qr = qrcode.make(url_validacion)
                     buffer = BytesIO()
                     qr.save(buffer, format="PNG")
